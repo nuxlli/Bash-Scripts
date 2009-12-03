@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+
+# TODO: Adicionar parametos padrão
+# TODO: Checagem de parametos, mostrando helps
+# TODO: Quando for ssh adicionar o host em ~/.ssh/config
+
+echo "Map port ${3} to ${4} in ${1} vm, for ${2}/${5}"
+VBoxManage setextradata "${1}" "VBoxInternal/Devices/pcnet/0/LUN#0/Config/${2}/HostPort" $3
+VBoxManage setextradata "${1}" "VBoxInternal/Devices/pcnet/0/LUN#0/Config/${2}/GuestPort" $4
+VBoxManage setextradata "${1}" "VBoxInternal/Devices/pcnet/0/LUN#0/Config/${2}/Protocol" $5
