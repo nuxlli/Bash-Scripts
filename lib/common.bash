@@ -72,9 +72,11 @@ function common_configure {
 	# Show conrrent rvm use vm version
 	# TODO: Display corrent rvm gems set
 	function rvm_version {
-		RVM_VERSION=`~/.rvm/bin/rvm-prompt`
-		if [[ -f "$(pwd)/Rakefile" ]] && [[ ! -z "$RVM_VERSION" ]]; then
-			echo "${RVM_VERSION} "
+		if [[ -f ~/.rvm/bin/rvm-prompt ]]; then
+			RVM_VERSION=`~/.rvm/bin/rvm-prompt`
+			if [[ -f "$(pwd)/Rakefile" ]] && [[ ! -z "$RVM_VERSION" ]]; then
+				echo "${RVM_VERSION} "
+			fi
 		fi
 	}
 
