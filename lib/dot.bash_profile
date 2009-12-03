@@ -9,6 +9,7 @@ fi
 
 export BASH_SCRIPTS_PATH=`cd \`dirname $(readlink ${__FILE__} || echo ${__FILE__} )\`/..; pwd`
 export BASH_SCRIPTS_LIBS="${BASH_SCRIPTS_PATH}/lib"
+export BASH_SCRIPTS_PRIV="${BASH_SCRIPTS_PATH}/private"
 
 # Load SO conditional configure and common
 source "${BASH_SCRIPTS_LIBS}/$(echo "$(uname)" | awk '{ print tolower($0) }').bash"
@@ -20,4 +21,6 @@ common_configure "$@"
 after_common "$@"
 
 # Private configure
-source $BASH_SCRIPTS_LIBS/private.bash
+if [[ -f $BASH_SCRIPTS_PRIV/private.bash ]]; then
+	source $BASH_SCRIPTS_PRIV/private.bash
+fi
