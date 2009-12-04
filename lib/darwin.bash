@@ -1,5 +1,7 @@
 #!/bin/sh
 
+debug "Load darwin bash configure"
+
 function before_common {
 	# Mac OS X configure
 	export EDITOR='tvim'

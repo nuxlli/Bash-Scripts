@@ -1,5 +1,7 @@
 #!/bin/sh
 
+debug "Load linux bash configure"
+
 # Linux configure	
 function before_common {
 	export EDITOR="vim"
