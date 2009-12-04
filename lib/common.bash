@@ -53,7 +53,7 @@ function common_configure {
 	export CLICOLOR="auto"
 	
 	# Man page configure
-	if [[ -f "$(which most)" ]]; then
+	if [[ -f "$(which most 2> /dev/null)" ]]; then
 	    export MANPAGER="$(which most) -s"
 	fi
 
