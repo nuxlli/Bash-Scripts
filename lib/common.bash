@@ -13,8 +13,6 @@ function common_configure {
 	esac
 
 	# Vim configure
-	alias   vi='mvim'
-	alias  vim='mvim -g'
 	alias gvim='mvim -g'
 	alias tvim='mvim --remote-tab'
 
@@ -22,7 +20,7 @@ function common_configure {
 	alias ll='ls -l'
 	alias l='ll'
 	alias la='ls -la'
-	alias ..="cd .."
+    # alias ..="cd .."
 	
 	# Cria o diretorio e entra automatico nele
 	mkdirg() { /bin/mkdir $@ && eval cd "\$$#"; }
@@ -42,6 +40,9 @@ function common_configure {
 	alias c='./script/console'
 	alias s='./script/server'
 	alias spec='spec -O ~/.rspecrc'
+	
+	# Git
+	alias gitstrm='git st | grep deleted | sed '\''s/#//'\'' | sed '\''s/deleted://'\'' | xargs git rm'
 
 	# History
 	export HISTIGNORE='&:ls:lr:ll:[bf]g:pwd'
@@ -74,18 +75,40 @@ function common_configure {
 	function rvm_version {
 		if [[ -f ~/.rvm/bin/rvm-prompt ]]; then
 			RVM_VERSION=`~/.rvm/bin/rvm-prompt`
+			GEM_SET="$(echo $GEM_PATH | awk -F'%' '{print $2}')"
 			if [[ -f "$(pwd)/Rakefile" ]] && [[ ! -z "$RVM_VERSION" ]]; then
 				echo "${RVM_VERSION} "
 			fi
 		fi
 	}
+	
+	function rvm_gem_set {
+	    GEM_SET="$(echo $GEM_PATH | awk -F'%' '{print $2}')"
+	    if [[ -f "$(pwd)/Rakefile" ]] && [[ ! -z "$GEM_SET" ]]; then
+	        echo "(%${GEM_SET}) "
+        fi
+	}
 
 	# TODO: Color themes
-	PS1='\[\e[37m\][\[\e[31m\]\t\[\e[37m\]] \[\e[32m\]${HOSTNAME}:\[\e[37m\]\W \[\e[32m\]$(parse_git_branch)\[\e[33m\]$(rvm_version)\[\e[37m\]\$\[\e[m\] '
+	PS1='\[\e[37m\][\[\e[31m\]\t\[\e[37m\]] \[\e[32m\]${HOSTNAME}:\[\e[37m\]\W \[\e[32m\]$(parse_git_branch)\[\e[33m\]$(rvm_version)$(rvm_gem_set)\[\e[37m\]\$\[\e[m\] '
 	
 	# Completation scripts
 	source $BASH_SCRIPTS_LIBS/git-completion.bash
 	complete -C $BASH_SCRIPTS_LIBS/rake-completion.rb -o default rake
+	
+	# Auto CD
+	source $BASH_SCRIPTS_LIBS/preexec.bash
+
+    # called before each command and starts stopwatch
+    function preexec () {
+    	export PREEXEC_CMD="$BASH_COMMAND"
+    	if [ `echo $BASH_COMMAND | wc -w` = '1' ] && [ ! `which $BASH_COMMAND` ] && [ -d $BASH_COMMAND ]; then
+            cd $BASH_COMMAND
+            return 1
+        fi
+    }
+
+    preexec_install
 
 	# Ant
 	export ANT_OPTS="-Xmx512m"
