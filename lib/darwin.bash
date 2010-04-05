@@ -17,6 +17,7 @@ function before_common {
 	export PATH=/usr/local/mysql/bin:$PATH
 	export PATH=/usr/local/scala-2.7.5.final/bin:$PATH
 	export PATH=/opt/local/bin:$PATH
+	export PATH=/opt/erlang/current/bin:$PATH
 }
 
 function after_common {
