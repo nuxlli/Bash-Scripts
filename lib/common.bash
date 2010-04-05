@@ -98,10 +98,7 @@ function common_configure {
 	
 	# Auto CD
 	source $BASH_SCRIPTS_LIBS/preexec.bash
-
-    # called before each command and starts stopwatch
     function preexec () {
-    	export PREEXEC_CMD="$BASH_COMMAND"
     	if [ `echo $BASH_COMMAND | wc -w` = '1' ] && [ ! `which $BASH_COMMAND` ] && [ -d $BASH_COMMAND ]; then
             cd $BASH_COMMAND
             return 1
