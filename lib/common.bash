@@ -100,12 +100,15 @@ function common_configure {
     source $BASH_SCRIPTS_LIBS/preexec.bash
     source $BASH_SCRIPTS_LIBS/functions.bash
     function preexec () {
-        exception="parse_git_branch rvm_version rvm_gem_set"
-        index=$(search_array "$exception" $BASH_COMMAND)
-        if [ -z "$index" ]; then
-            if [ `echo $BASH_COMMAND | wc -w` = '1' ] && [ ! `which $BASH_COMMAND` ] && [ -d $BASH_COMMAND ]; then
+        if [ `echo $BASH_COMMAND | wc -w` = '1' ] && [ ! `which $BASH_COMMAND` ]; then
+            if [ -d $BASH_COMMAND ]; then
                 cd $BASH_COMMAND
                 return 1
+            elif [ -r $BASH_COMMAND ]; then
+                open $BASH_COMMAND
+                return 1
+            else
+                return 0
             fi
         fi
     }
