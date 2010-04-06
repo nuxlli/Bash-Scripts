@@ -1,0 +1,32 @@
+#!/usr/bin/env bash
+
+# TODO: Open all
+# TODO: None option
+# TODO: Only remote github is opened
+
+# Get remotes or raiser error
+remotes=( $(git remote) )
+
+if [ ! -z "$remotes" ]; then
+    # Get remote urls
+    url_remotes=( $(git remote show -n ${remotes[@]} | sed -n 's/^.*URL://p' | sed -n -e 's/.*[@|:\/\/]github\.com[:|\/]/http:\/\/github.com\//;s/\.git//p'))
+    
+    # To open one remote
+    if [ `echo ${remotes[@]} | wc -w` = '1' ]; then
+        echo "opening ${url_remotes[0]}"
+        open "${url_remotes[0]}"
+    else
+        # Multiples remotes
+        index=0
+        echo
+        echo "Select remote to open:"
+        while [ "$index" -lt "${#remotes[@]}" ]; do
+            remote="${remotes[$index]}"
+            echo " $index. ${remotes[$index]} (${url_remotes[$index]})"
+            let "index++"
+        done
+        read -p "> " answer
+        echo "opening ${url_remotes[$answer]}"
+        open "${url_remotes[$answer]}"
+    fi
+fi
