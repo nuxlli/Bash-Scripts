@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# Opens in the browser the remote repository, or lists possible if ouver more than one repository.
+# power by: Éverton Ribeiro <nuxlli@gmail.com>
+
 # TODO: Open all
 # TODO: None option
 # TODO: Only remote github is opened
