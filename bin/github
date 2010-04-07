@@ -3,33 +3,61 @@
 # Opens in the browser the remote repository, or lists possible if ouver more than one repository.
 # power by: Éverton Ribeiro <nuxlli@gmail.com>
 
-# TODO: Open all
-# TODO: None option
-# TODO: Only remote github is opened
+function error() {
+    echo $1
+    exit 1
+}
+
+function open_remote {
+    remote_url=$(echo $1 | cut -d '$' -f2)
+    echo "Opening $remote_url"
+    open $remote_url
+}
 
 # Get remotes or raiser error
-remotes=( $(git remote) )
-
-if [ ! -z "$remotes" ]; then
-    # Get remote urls
-    url_remotes=( $(git remote show -n ${remotes[@]} | sed -n 's/^.*URL://p' | sed -n -e 's/.*[@|:\/\/]github\.com[:|\/]/http:\/\/github.com\//;s/\.git//p'))
-    
-    # To open one remote
-    if [ `echo ${remotes[@]} | wc -w` = '1' ]; then
-        echo "opening ${url_remotes[0]}"
-        open "${url_remotes[0]}"
-    else
-        # Multiples remotes
-        index=0
-        echo
-        echo "Select remote to open:"
-        while [ "$index" -lt "${#remotes[@]}" ]; do
-            remote="${remotes[$index]}"
-            echo " $index. ${remotes[$index]} (${url_remotes[$index]})"
+if remotes=($(git remote)); then
+    if [ ! -z "$remotes" ]; then
+        # Get remotes information
+        remotes=($(git remote show -n ${remotes[@]} | sed -n -e 's/^* remote \(.*\)/\1/p;s/URL: \(.*\)/\1/p' | sed -n '{N; s/^\(.*\)\n/\1/;  s/\(.*\)  git.*github\.com[:|\/]\(.*\).git/\1$http:\/\/github.com\/\2/p;}'))
+        
+        # Not remote githut added
+        if [ -z "$remotes" ]; then
+            error "Not remote github"
+        
+        # One remote
+        elif [ `echo ${remotes[@]} | wc -w` = '1' ]; then
+            open_remote ${remotes[0]}
+        
+        # Multiple remotes
+        else
+            index=0
+            echo
+            echo "Select remote to open:"
+            echo " 0. None"
+            while [ "$index" -lt "${#remotes[@]}" ]; do
+                echo " $(echo $index + 1 | bc). $(echo ${remotes[$index]} | sed -n 's/\$/ - /p')"
+                let "index++"
+            done
             let "index++"
-        done
-        read -p "> " answer
-        echo "opening ${url_remotes[$answer]}"
-        open "${url_remotes[$answer]}"
+            echo " $index. All"
+            read -p "> " answer
+            case $answer in
+                0 )
+                    exit 0
+                    ;;
+                $index )
+                    echo "Open all"
+                    index=0
+                    while [ "$index" -lt "${#remotes[@]}" ]; do
+                        open_remote ${remotes[$index]}
+                        let "index++"
+                    done
+                    ;;
+                * )
+                    open_remote ${remotes[$(echo $answer - 1 | bc)]};;
+            esac
+        fi
+    else
+        error "Not remotes"
     fi
 fi
