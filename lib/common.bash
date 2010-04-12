@@ -101,7 +101,15 @@ function common_configure {
     source $BASH_SCRIPTS_LIBS/functions.bash
     function preexec () {
         if [ `echo $BASH_COMMAND | wc -w` = '1' ] && [ ! `which $BASH_COMMAND` ]; then
-            if [ -d $BASH_COMMAND ]; then
+            url_git=$(echo $BASH_COMMAND | grep '^[git://|git@]')
+            url=$(echo $BASH_COMMAND | grep '^http://')
+            if [ ! -z $url_git ]; then
+                git clone $url_git
+                return 1
+            elif [ ! -z $url ]; then
+                open $url
+                return 1
+            elif [ -d $BASH_COMMAND ]; then
                 cd $BASH_COMMAND
                 return 1
             elif [ -r $BASH_COMMAND ]; then
