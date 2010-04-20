@@ -90,11 +90,12 @@ function common_configure {
     }
 
     # TODO: Color themes
-    PS1='\[\e[37m\][\[\e[31m\]\t\[\e[37m\]] \[\e[32m\]${HOSTNAME}:\[\e[37m\]\W \[\e[32m\]$(parse_git_branch)\[\e[33m\]$(rvm_version)$(rvm_gem_set)\[\e[37m\]\$\[\e[m\] '
+    PS1='\[\e[37m\][\[\e[31m\]\t\[\e[37m\]] \[\e[32m\]${HOSTNAME}:\[\e[37m\]\W\[\e[32m\]$(__git_ps1) \[\e[33m\]$(rvm_version)$(rvm_gem_set)\[\e[37m\]\$\[\e[m\] '
     
     # Completation scripts
     source $BASH_SCRIPTS_LIBS/git-completion.bash
     complete -C $BASH_SCRIPTS_LIBS/rake-completion.rb -o default rake
+    source $BASH_SCRIPTS_LIBS/gem_completion.sh
     
     # Auto CD
     source $BASH_SCRIPTS_LIBS/preexec.bash
