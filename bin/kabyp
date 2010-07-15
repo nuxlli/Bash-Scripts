@@ -1,0 +1,18 @@
+#!/bin/sh
+
+# Kill app by port
+
+LSOF=/usr/sbin/lsof
+
+for PORT in `netstat -an -f inet | grep -i listen | awk '{ print $4 }' | sed -e :a -e 's/.*\.//'`; do
+    if [ "$PORT" = "$1" ]; then
+       $LSOF -i :${PORT} 2>/dev/null | grep LISTEN | tail -1 | while read line; do
+           set $line
+           COMMAND=$1
+           PID=$2
+           LSOF_USER=$3
+           printf "%-6d %-10s %-6d %-8s\n" "$PORT" "$COMMAND" "$PID" "$LSOF_USER"
+           kill $PID
+       done
+    fi
+done
