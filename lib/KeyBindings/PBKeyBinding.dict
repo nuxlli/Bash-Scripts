@@ -1,0 +1,15 @@
+{
+	"^$K" = (
+		"selectLine:",
+		"cut:"
+	);
+	
+	"^$D" = (
+		"selectLine:",
+		"copy:",
+		"moveToEndOfLine:",
+		"insertNewline:",
+		"paste:",
+		"deleteBackward:"
+	);
+}
