@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+
+thin -R $BASH_SCRIPTS_PATH/bin/static.ru start
