@@ -4,7 +4,7 @@ debug "Load darwin bash configure"
 
 function before_common {
 	# Mac OS X configure
-	export EDITOR='tvim'
+	export EDITOR='mate'
 	alias ls='ls -G'
 	
 	# Language em character set
@@ -18,6 +18,14 @@ function before_common {
 	export PATH=/usr/local/scala-2.7.5.final/bin:$PATH
 	export PATH=/opt/local/bin:$PATH
 	export PATH=/opt/erlang/current/bin:$PATH
+	export PATH=/usr/local/Cellar/android-sdk/r6/tools:$PATH
+	export PATH=/usr/local/Cellar/android-sdk/r6/platforms/android-3/tools:$PATH
+	
+	# New environment setting added by Symbian ADT Sourcery G++ Lite for ARM SymbianOS on Wed May 05 19:26:46 BRT 2010 1.
+	# The unmodified version of this file is saved in /Users/eribeiro/.bash_profile86656300.
+	# Do NOT modify these lines; they are used to uninstall.
+	PATH="/Applications/CodeSourcery/Sourcery G++ Lite/bin:${PATH}"
+	export PATH
 }
 
 function after_common {
@@ -45,4 +53,7 @@ function after_common {
 	# Oracle
 	export DYLD_LIBRARY_PATH="/opt/oracle/instantclient_10_2:$DYLD_LIBRARY_PATH"
 	export TNS_ADMIN=/opt/oracle/tns
+	
+	# Android
+	export ANDROID_SDK_ROOT=/usr/local/Cellar/android-sdk/r6
 }

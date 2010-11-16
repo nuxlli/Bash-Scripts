@@ -5,10 +5,11 @@ function common_configure {
     export PATH=~/bin:$PATH
     export PATH=./bin:$PATH
     export PATH=$BASH_SCRIPTS_PATH/bin:$PATH
+    export PATH=$PATH:/Library/Frameworks/Mono.framework/Versions/Current/bin
     
     # sledge hostname
     case `hostname` in
-        HDU15109-Adigital-2.local) export HOSTNAME="hansolo";;
+        HDU15109-VPID.local) export HOSTNAME="hansolo";;
         *) export HOSTNAME=`hostname`;;
     esac
 
@@ -90,7 +91,7 @@ function common_configure {
     }
 
     # TODO: Color themes
-    PS1='\[\e[37m\][\[\e[31m\]\t\[\e[37m\]] \[\e[32m\]${HOSTNAME}:\[\e[37m\]\W\[\e[32m\]$(__git_ps1) \[\e[33m\]$(rvm_version)$(rvm_gem_set)\[\e[37m\]\$\[\e[m\] '
+    PS1='\[\e[37m\][\[\e[31m\]\t\[\e[37m\]] \[\e[32m\]${HOSTNAME}:\[\e[37m\]\W\[\e[32m\]$(__git_ps1) \[\e[33m\]$(rvm_version)$(rvm_gem_set)\[\e[37m\]\n\$\[\e[m\] '
     
     # Completation scripts
     source $BASH_SCRIPTS_LIBS/git-completion.bash
@@ -102,15 +103,7 @@ function common_configure {
     source $BASH_SCRIPTS_LIBS/functions.bash
     function preexec () {
         if [ `echo $BASH_COMMAND | wc -w` = '1' ] && [ ! `which $BASH_COMMAND` ]; then
-            url_git=$(echo $BASH_COMMAND | grep '^[git://|git@]')
-            url=$(echo $BASH_COMMAND | grep '^http://')
-            if [ ! -z $url_git ]; then
-                git clone $url_git
-                return 1
-            elif [ ! -z $url ]; then
-                open $url
-                return 1
-            elif [ -d $BASH_COMMAND ]; then
+            if [ -d $BASH_COMMAND ]; then
                 cd $BASH_COMMAND
                 return 1
             elif [ -r $BASH_COMMAND ]; then
@@ -127,4 +120,9 @@ function common_configure {
     # Ant
     export ANT_OPTS="-Xmx512m"
     export JAVA_OPTS="-Xmx512m"
+    
+    # Mono
+    export PKG_CONFIG_PATH=/Library/Frameworks/Mono.framework/Home/lib/pkgconfig:$PKG_CONFIG_PATH
+    export PKG_CONFIG_PATH=/Library/Frameworks/Mono.framework/Versions/Current/lib/pkgconfig:$PKG_CONFIG_PATH
+    #export PKG_CONFIG_PATH=`find /usr/local/Cellar -name pkgconfig | tail -r | sed -e :a -e '$!N; s/\n/:/; ta'`:$PKG_CONFIG_PATH
 }
