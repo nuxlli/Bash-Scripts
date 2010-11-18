@@ -71,27 +71,32 @@ function common_configure {
         fi
     }
 
-    # Show conrrent rvm use vm version
-    # TODO: Display corrent rvm gems set
-    function rvm_version {
-        if [[ -f ~/.rvm/bin/rvm-prompt ]]; then
-            RVM_VERSION=`~/.rvm/bin/rvm-prompt`
-            GEM_SET="$(echo $GEM_PATH | awk -F'%' '{print $2}')"
-            if [[ -f "$(pwd)/Rakefile" ]] && [[ ! -z "$RVM_VERSION" ]]; then
-                echo "${RVM_VERSION} "
-            fi
+    # Show corrent ruby version
+    function __ruby_version {
+        if [ ! -f ./Rakefile ] &&
+            [ "$(find . -maxdepth 1 -name '*.rb' | head -n1)" == "" ]; then
+            exit 1
         fi
-    }
-    
-    function rvm_gem_set {
-        GEM_SET="$(echo $GEM_PATH | awk -F'%' '{print $2}')"
-        if [[ -f "$(pwd)/Rakefile" ]] && [[ ! -z "$GEM_SET" ]]; then
-            echo "(%${GEM_SET}) "
+        
+        if [ -f ~/.rvm/bin/rvm-prompt ]; then
+            rst=$(~/.rvm/bin/rvm-prompt $2 $3 $4 $5)
+        fi
+        
+        if [ -z "$rst" ]; then
+            rst=$(ruby -v | cut -f2 -d' ')
+        fi
+        
+        fmt="ruby: %s"
+        if [ -n "$1" ]; then
+            fmt="$1"
+        fi
+        if [ -n "$rst" ]; then
+            printf "$fmt" "${rst}"
         fi
     }
 
     # TODO: Color themes
-    PS1='\[\e[37m\][\[\e[31m\]\t\[\e[37m\]] \[\e[32m\]${HOSTNAME}:\[\e[37m\]\W\[\e[32m\]$(__git_ps1) \[\e[33m\]$(rvm_version)$(rvm_gem_set)\[\e[37m\]\n\$\[\e[m\] '
+    PS1='\[\e[37m\][\[\e[31m\]\t\[\e[37m\]] \[\e[32m\]${HOSTNAME}:\[\e[37m\]\W\[\e[32m\]$(__git_ps1) \[\e[33m\]$(__ruby_version)\[\e[37m\]\n\$\[\e[m\] '
     
     # Completation scripts
     source $BASH_SCRIPTS_LIBS/git-completion.bash
