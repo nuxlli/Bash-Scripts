@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+
+$(which rlwrap) lua $BASH_SCRIPTS_LIBS/ilua.lua $@
