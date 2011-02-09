@@ -1,3 +1,9 @@
 #!/usr/bin/env bash
 
-thin -R $BASH_SCRIPTS_LIBS/static.ru start
+if [ "$1" = "" ]; then
+	PORT=3000
+else
+	PORT="$1"
+fi
+
+rvm 1.8.7-p174@sthin exec bash -c "thin --rackup $BASH_SCRIPTS_LIBS/static.ru --port $PORT start"
