@@ -75,7 +75,7 @@ function common_configure {
     function __ruby_version {
         if [ ! -f ./Rakefile ] &&
             [ "$(find . -maxdepth 1 -name '*.rb' | head -n1)" == "" ]; then
-            exit 1
+            return
         fi
         
         if [ -f ~/.rvm/bin/rvm-prompt ]; then
@@ -94,9 +94,18 @@ function common_configure {
             printf "$fmt" "${rst}"
         fi
     }
+    
+    # Show excute sucess
+    function __success_or_not {
+        if [[ $? == 0 ]]; then
+            printf '\e[32m:)\e[m'
+        else
+            printf '\e[31m:(\e[m'
+        fi
+    }
 
     # TODO: Color themes
-    PS1='\[\e[37m\][\[\e[31m\]\t\[\e[37m\]] \[\e[32m\]${HOSTNAME}:\[\e[37m\]\W\[\e[32m\]$(__git_ps1) \[\e[33m\]$(__ruby_version)\[\e[37m\]\n\$\[\e[m\] '
+    PS1='\[\e[37m\][\[\e[31m\]\t\[\e[37m\]] \[\e[32m\]${HOSTNAME} $(__success_or_not) :\[\e[37m\]\W\[\e[32m\]$(__git_ps1) \[\e[33m\]$(__ruby_version)\[\e[37m\]\n\$\[\e[m\] '
     
     # Completation scripts
     source $BASH_SCRIPTS_LIBS/git-completion.bash
